@@ -1,0 +1,23 @@
+.btn.btn-light-red {
+  background-color: #ffcccc; 
+  border-color: #ff9999; 
+  color: #660000; 
+}
+
+.btn.btn-light-red:hover {
+  background-color: #ffb3b3; 
+  border-color: #ff8080; 
+}
+
+.btn.btn-light-yellow {
+  background-color: #f5d06f;
+  border-color: #e6b94b;
+  color: #660000;
+}
+
+.btn.btn-light-yellow:hover {
+  background-color: #e6be5c; 
+  border-color: #d9a73f;
+}
+
+
