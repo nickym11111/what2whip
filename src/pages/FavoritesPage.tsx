@@ -58,7 +58,7 @@ const FavoritesPage = ({ token }: { token: any }) => {
         </p>
 
        
-        <ul>
+        
           {favoriteRecipes.map((item, index) => {
             const recipeData = JSON.parse(item.recipe_data); 
             return (
@@ -68,7 +68,7 @@ const FavoritesPage = ({ token }: { token: any }) => {
               </li>
             );
           })}
-        </ul>
+        
 
         <Navbar />
       </div>

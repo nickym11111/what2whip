@@ -7,6 +7,7 @@ import Homepage from "./pages/Homepage";
 import { useEffect, useState } from "react";
 import IngredientsPage from "./pages/IngredientsPage";
 import FavoritesPage from "./pages/FavoritesPage";
+import React from "react";
 
 function App() {
   const [token, setToken] = useState(false);

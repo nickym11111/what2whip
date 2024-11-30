@@ -38,7 +38,14 @@ const Open = () => {
           </button>
         </div>
       </div>
+      <div className = "fixed-bottom">
+      <a  href="https://www.flaticon.com/free-icons/cutlery" title="cutlery icons">cutlery icons created by edt.im - flaticon</a>
+
+      </div>
+
+  
     </div>
+    
   );
 };
 

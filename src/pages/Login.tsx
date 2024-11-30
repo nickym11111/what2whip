@@ -1,6 +1,7 @@
 import { useState } from "react";
 import supabase from "../utils/client";
 import { Link, useNavigate } from "react-router-dom";
+import React from "react";
 
 const Login = ({ setToken }: { setToken: (token: any) => void }) => {
   const navigate = useNavigate();
