@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Configuration from "openai";
 import OpenAI from "openai";
 import { ApiKey } from "aws-cdk-lib/aws-apigateway";
@@ -6,17 +6,39 @@ import axios from "axios";
 import supabase from "../utils/client";
 
 const IngredientsList = ({ token }: { token: any }) => {
-  const [ingredient, setIngredient] = useState<string>("");
-  const [ingredients, setIngredients] = useState<string[]>([]);
-  const [recipes, setRecipes] =
-    useState<{ recipe: string; instructions: string }[]>([]) ||
-    localStorage.getItem("recipes");
+  const [ingredient, setIngredient] = useState<string>(
+    sessionStorage.getItem("ingredient") || ""
+  );
+  const [ingredients, setIngredients] = useState<string[]>(
+    JSON.parse(sessionStorage.getItem("ingredients") ||"[]"));
+  const [recipes, setRecipes] = useState<
+    { recipe: string; instructions: string }[]
+  >( JSON.parse(sessionStorage.getItem("recipes")||"[]"));
+  const [favorites, setFavorites] = useState<Set<number>>(
+    new Set (JSON.parse(sessionStorage.getItem("favorites") || "[]")));
 
-  const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState<boolean>(false);
   //const [cachedResponses, setCachedResponses] = useState<
   //  Record<string, string[]>
   // >({});
+
+  // Save states to localStorage whenever they change
+  useEffect(() => {
+    sessionStorage.setItem("ingredient", ingredient);
+  }, [ingredient]);
+
+  useEffect(() => {
+    sessionStorage.setItem("ingredients", JSON.stringify(ingredients));
+  }, [ingredients]);
+
+  useEffect(() => {
+    sessionStorage.setItem("recipes", JSON.stringify(recipes));
+  }, [recipes]);
+
+  useEffect(() => {
+    sessionStorage.setItem("favorites", JSON.stringify(Array.from(favorites)));
+  }, [favorites]);
+
 
   const addIngredient = () => {
     if (ingredient.trim() !== "") {
@@ -80,7 +102,6 @@ const IngredientsList = ({ token }: { token: any }) => {
         }
       );
       setRecipes(recipeInstructionDict);
-      
 
       // Update cache
       // setCachedResponses({ ...cachedResponses, [prompt]: recipeArray });
@@ -96,6 +117,7 @@ const IngredientsList = ({ token }: { token: any }) => {
       setLoading(false);
     }
   };
+
   // Save favorite to Supabase
   const toggleFavorite = async (
     index: number,
@@ -115,7 +137,7 @@ const IngredientsList = ({ token }: { token: any }) => {
       await supabase
         .from("favorites")
         .delete()
-        .eq("user_id", token) 
+        .eq("user_id", token)
         .eq("recipe_id", index);
     } else {
       setFavorites((prev) => {
@@ -140,13 +162,13 @@ const IngredientsList = ({ token }: { token: any }) => {
       <div className="row justify-content-center">
         <div className="col-12 col-md-6">
           <h1 className="mb-3 text-center" style={{ color: "#660000" }}>
-            Ingredients List
+            ingredients list
           </h1>
           <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
-              placeholder="Enter an ingredient"
+              placeholder="enter an ingredient"
               value={ingredient}
               onChange={(e) => setIngredient(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -156,7 +178,7 @@ const IngredientsList = ({ token }: { token: any }) => {
               data-bs-toggle="button"
               onClick={addIngredient}
             >
-              Add Ingredient
+              add ingredient
             </button>
           </div>
           <ul className="list-group">
@@ -180,11 +202,11 @@ const IngredientsList = ({ token }: { token: any }) => {
             onClick={callBackendAPI}
             disabled={loading}
           >
-            {loading ? "Generating..." : "Generate Recipes"}
+            {loading ? "generating..." : "generate Recipes"}
           </button>
           {recipes.length > 0 && (
             <div className="mt-4">
-              <h2>Generated Recipes:</h2>
+              <h2>generated recipes:</h2>
               <div className="row justify-content-center">
                 {recipes.map((recipeData, index) => (
                   <div key={index} className="">
@@ -213,7 +235,7 @@ const IngredientsList = ({ token }: { token: any }) => {
                           } mt-3`}
                           onClick={() => toggleFavorite(index, recipeData)}
                         >
-                          {favorites.has(index) ? "Unfavorite" : "Favorite"} ❤️
+                          {favorites.has(index) ? "unfavorite" : "favorite"} ❤️
                         </button>
                       </div>
                     </div>
