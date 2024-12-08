@@ -74,7 +74,7 @@ const FavoritesPage = () => {
             const recipeData = JSON.parse(item.recipe_data);
             return (
               <div key={index} className="mb-4">
-                <div className="card">
+                <div className="card justify-content-center" style = {{ maxWidth: "900px", margin: "0 auto" }}>
                   <div className="card-body">
                     <h5 className="card-title">Recipe {index + 1}</h5>
                     <p className="card-text">{recipeData.recipe}</p>
