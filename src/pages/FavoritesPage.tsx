@@ -2,22 +2,57 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import supabase from "../../backend/utils/client";
+import { useAuth } from "../context/AuthContext";
 
-const FavoritesPage = ({ token }: { token: any }) => {
+const FavoritesPage = () => {
+  const { token, setToken } = useAuth();  
+
+  useEffect(() => {
+    // Example: Check if token is null and redirect to login if necessary
+    if (!token) {
+      console.log("No token, redirecting to login");
+      // You could use `navigate` from `react-router-dom` to redirect
+    }
+  }, [token]);
+
+  console.log("token", token);
   const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
+  let newToken;
 
   const navigate = useNavigate();
 
+  const fetchSession = async () => {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+      console.error("Error fetching session:", error);
+      return null;
+    }
+    newToken =  data.session;
+    return newToken;
+  };
+
   useEffect(() => {
+    const loadSession = async () => {
+      const session = await fetchSession();
+      console.log("Fetched session:", session); // Inspect the session object
+    };
+    loadSession();
+  }, []);
+
+  useEffect(() => {
+
+    
     console.log("Token value in useEffect:", token);
 
     const fetchFavorites = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/favorites?user_id=${token.user.id}`
+          `http://localhost:3000/favorites?user_id=${token}`
         );
+        console.log("response", response);
         const data = await response.json();
+        console.log("data, ", data);
         setFavoriteRecipes(data || []);
         setFavorites(new Set(data?.map((_, index) => index) || []));
       } catch (error) {

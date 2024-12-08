@@ -8,38 +8,25 @@ import { useEffect, useState } from "react";
 import IngredientsPage from "./pages/IngredientsPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import React from "react";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
-  const [token, setToken] = useState(false);
-  if (token) {
-    sessionStorage.setItem("token", JSON.stringify(token));
-  }
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    if (token) {
-      const data = JSON.parse(token); // safe to parse since token is confirmed to be a string
-      setToken(data);
-    }
-  }, []);
+
   return (
     <div>
+      <AuthProvider> 
       <Routes>
         <Route path={"/"} element={<Open />} />
         <Route path={"/signup"} element={<SignUp />} />
-        <Route path={"/login"} element={<Login setToken={setToken} />} />
+        <Route path={"/login"} element={<Login  />} />
         <Route
           path="/ingredients"
-          element={<IngredientsPage token={token} />}
+          element={<IngredientsPage  />}
         />
-        <Route path="/favorites" element={<FavoritesPage token={token} />} />
-
-
-        {token ? (
-          <Route path={"/homepage"} element={<Homepage token={token} />} />
-        ) : (
-          ""
-        )}
+        <Route path="/favorites" element={<FavoritesPage  />} />
+        
       </Routes>
+      </AuthProvider>
     </div>
   );
 }

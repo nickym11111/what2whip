@@ -1,9 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import supabase from "../../backend/utils/client";
 import { Link, useNavigate } from "react-router-dom";
 import React from "react";
+import { useAuth } from "../context/AuthContext";
 
-const Login = ({ setToken }: { setToken: (token: any) => void }) => {
+const Login = () => {
+  const { token, setToken } = useAuth();  
+
+  useEffect(() => {
+    // Example: Check if token is null and redirect to login if necessary
+    if (!token) {
+      console.log("No token, redirecting to login");
+      // You could use `navigate` from `react-router-dom` to redirect
+    }
+  }, [token]);
+
+  console.log("token", token);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -28,7 +40,7 @@ const Login = ({ setToken }: { setToken: (token: any) => void }) => {
       });
 
       if (error) throw error;
-      setToken(data);
+      setToken(JSON.stringify(data.user));
       navigate("/ingredients");
     } catch (error) {
       alert(error);

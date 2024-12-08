@@ -2,8 +2,9 @@ import supabase from "../utils/client.js";
 
 // Fetch all favorites
 export const getFavorites = async (req, res) => {
+    
     const userId = req.query.user_id; // Assume `user_id` is passed as a query parameter.
-  
+    console.log("reached here favorites");
     try {
       const { data, error } = await supabase
         .from("favorites")

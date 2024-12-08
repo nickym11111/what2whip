@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import IngredientsList from "../components/IngredientsList";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
 
-const IngredientsPage = ({ token }: { token: any }) => {
+const IngredientsPage = () => {
   const navigate = useNavigate();
+
+  const { token, setToken } = useAuth();
+
+  useEffect(() => {
+    // Example: Check if token is null and redirect to login if necessary
+    if (!token) {
+      console.log("No token, redirecting to login");
+      // You could use `navigate` from `react-router-dom` to redirect
+    }
+  }, [token]);
 
   return (
     <div
@@ -24,7 +35,7 @@ const IngredientsPage = ({ token }: { token: any }) => {
         {/* Logout Button */}
         <button
           onClick={() => navigate("/")}
-          className="btn btn-light-yellow" 
+          className="btn btn-light-yellow"
           style={{
             position: "absolute",
             top: "1rem",
@@ -43,7 +54,7 @@ const IngredientsPage = ({ token }: { token: any }) => {
           type the ingredients you have, and we'll generate recipes for you!
         </p>
         <div>
-          <IngredientsList token = {token}/>
+          <IngredientsList/>
         </div>
         <Navbar />
       </div>

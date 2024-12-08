@@ -14,9 +14,9 @@ const Homepage = ({ token }: { token: any }) => {
       <Routes>
         <Route
           path="/ingredients"
-          element={<IngredientsPage token={token} />}
+          element={<IngredientsPage />}
         />
-        <Route path="/favorites" element={<FavoritesPage token={token} />} />
+        <Route path="/favorites" element={<FavoritesPage/>} />
       </Routes>
 
      

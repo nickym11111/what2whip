@@ -4,8 +4,19 @@ import OpenAI from "openai";
 import { ApiKey } from "aws-cdk-lib/aws-apigateway";
 import axios from "axios";
 import supabase from "../../backend/utils/client";
+import { useAuth } from "../context/AuthContext";
+const IngredientsList = () => {
+  const { token, setToken } = useAuth();  
 
-const IngredientsList = ({ token }: { token: any }) => {
+  useEffect(() => {
+    // Example: Check if token is null and redirect to login if necessary
+    if (!token) {
+      console.log("No token, redirecting to login");
+      // You could use `navigate` from `react-router-dom` to redirect
+    }
+  }, [token]);
+
+  
   const [ingredient, setIngredient] = useState<string>(
     sessionStorage.getItem("ingredient") || ""
   );
@@ -18,13 +29,8 @@ const IngredientsList = ({ token }: { token: any }) => {
   const [favorites, setFavorites] = useState<Set<number>>(
     new Set(JSON.parse(sessionStorage.getItem("favorites") || "[]"))
   );
-
   const [loading, setLoading] = useState<boolean>(false);
-  //const [cachedResponses, setCachedResponses] = useState<
-  //  Record<string, string[]>
-  // >({});
 
-  // Save states to localStorage whenever they change
   useEffect(() => {
     sessionStorage.setItem("ingredient", ingredient);
   }, [ingredient]);
@@ -69,12 +75,6 @@ const IngredientsList = ({ token }: { token: any }) => {
     const prompt = `Briefly generate 3 concise recipes with these ingredients: ${ingredients.join(
       ", "
     )}. Please provide the recipes with their instructions in a readable format and label "Recipe 1","Recipe 2", "Recipe 3",`;
-    /*
-    if (cachedResponses[prompt]) {
-      setRecipes(cachedResponses[prompt]); // Split and update recipes
-      return;
-    }
-*/
     setLoading(true);
 
     try {
@@ -104,8 +104,6 @@ const IngredientsList = ({ token }: { token: any }) => {
       );
       setRecipes(recipeInstructionDict);
 
-      // Update cache
-      // setCachedResponses({ ...cachedResponses, [prompt]: recipeArray });
     } catch (error) {
       console.error("Error calling the backend API:", error);
       setRecipes([
@@ -118,8 +116,6 @@ const IngredientsList = ({ token }: { token: any }) => {
       setLoading(false);
     }
   };
-
-
 
   // Save favorite to Supabase
   const toggleFavorite = async (
