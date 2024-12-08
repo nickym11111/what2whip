@@ -8,10 +8,8 @@ const Login = () => {
   const { token, setToken } = useAuth();  
 
   useEffect(() => {
-    // Example: Check if token is null and redirect to login if necessary
     if (!token) {
       console.log("No token, redirecting to login");
-      // You could use `navigate` from `react-router-dom` to redirect
     }
   }, [token]);
 

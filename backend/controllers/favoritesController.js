@@ -2,7 +2,7 @@ import supabase from "../utils/client.js";
 
 // Fetch all favorites
 export const getFavorites = async (req, res) => {
-    const userId = req.query.user_id; // Assume `user_id` is passed as a query parameter.
+    const userId = req.query.user_id; 
     console.log("userId in backend", userId);
 
     try {

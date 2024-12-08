@@ -5,13 +5,11 @@ interface AuthContextType {
   setToken: (token: string | null) => void;
 }
 
-// Create context with type and default values
 const AuthContext = createContext<AuthContextType>({
   token: null,
-  setToken: () => {}, // Default no-op function
+  setToken: () => {}, 
 });
 
-// AuthProvider component
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(() => {
     const savedToken = sessionStorage.getItem("token");
@@ -34,7 +32,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-// Hook to access AuthContext
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

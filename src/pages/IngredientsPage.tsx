@@ -10,10 +10,9 @@ const IngredientsPage = () => {
   const { token, setToken } = useAuth();
 
   useEffect(() => {
-    // Example: Check if token is null and redirect to login if necessary
     if (!token) {
       console.log("No token, redirecting to login");
-      // You could use `navigate` from `react-router-dom` to redirect
+      
     }
   }, [token]);
 
@@ -21,18 +20,17 @@ const IngredientsPage = () => {
     <div
       className="bg-light"
       style={{
-        minHeight: "100vh", // makes sure the background spans the full viewport height
-        display: "flex", // Optional: Ensures child elements can stack vertically
+        minHeight: "100vh",
+        display: "flex",
         flexDirection: "column",
       }}
     >
       <div
         style={{
           padding: "2rem",
-          paddingBottom: "4rem", // makes sure content doesn't overlap with the navbar
+          paddingBottom: "4rem", 
         }}
       >
-        {/* Logout Button */}
         <button
           onClick={() => navigate("/")}
           className="btn btn-light-yellow"

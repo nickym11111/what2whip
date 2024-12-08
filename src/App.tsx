@@ -3,8 +3,6 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Open from "./pages/Open";
 import { Routes, Route } from "react-router-dom";
-import Homepage from "./pages/Homepage";
-import { useEffect, useState } from "react";
 import IngredientsPage from "./pages/IngredientsPage";
 import FavoritesPage from "./pages/FavoritesPage";
 import React from "react";

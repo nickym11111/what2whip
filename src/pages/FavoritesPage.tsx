@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import supabase from "../../backend/utils/client";
 import { useAuth } from "../context/AuthContext";
 
 const FavoritesPage = () => {
   const { token, setToken } = useAuth();  
 
   useEffect(() => {
-    // Example: Check if token is null and redirect to login if necessary
     if (!token) {
       console.log("No token, redirecting to login");
-      // You could use `navigate` from `react-router-dom` to redirect
     }
   }, [token]);
 
   const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
   //const [favorites, setFavorites] = useState<Set<number>>(new Set());
-
 
   const navigate = useNavigate();
 
@@ -27,9 +23,7 @@ const FavoritesPage = () => {
         const response = await fetch(
           `http://localhost:3000/favorites?user_id=${token}`
         );
-        //console.log("response", response);
         const data = await response.json();
-        //console.log("data, ", data);
         setFavoriteRecipes(data || []);
         //setFavorites(new Set(data?.map((_, index) => index) || []));
       } catch (error) {
