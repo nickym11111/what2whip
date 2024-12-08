@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import supabase from "../utils/client";
+import supabase from "../../backend/utils/client";
 
 const FavoritesPage = ({ token }: { token: any }) => {
   const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
@@ -10,18 +10,18 @@ const FavoritesPage = ({ token }: { token: any }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchFavorites = async () => {
-      const { data, error } = await supabase
-        .from("favorites")
-        .select("recipe_data");
+    console.log("Token value in useEffect:", token);
 
-      if (error) {
-        console.error("Error fetching favorites:", error);
-      } else {
+    const fetchFavorites = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/favorites?user_id=${token.user.id}`
+        );
+        const data = await response.json();
         setFavoriteRecipes(data || []);
-        // Mark all recipes as favorites by default
-        const defaultFavorites = new Set(data?.map((_, index) => index) || []);
-        setFavorites(defaultFavorites);
+        setFavorites(new Set(data?.map((_, index) => index) || []));
+      } catch (error) {
+        console.error("Error fetching favorites:", error);
       }
     };
     fetchFavorites();
@@ -43,8 +43,8 @@ const FavoritesPage = ({ token }: { token: any }) => {
       });
 
       const normalizedRecipeData = favoriteRecipes[index].recipe_data;
-      console.log("normalized recipe data")
-      console.log(normalizedRecipeData)
+      console.log("normalized recipe data");
+      console.log(normalizedRecipeData);
 
       // Remove from Supabase
       const { data, error } = await supabase
@@ -153,47 +153,5 @@ const FavoritesPage = ({ token }: { token: any }) => {
     </div>
   );
 };
-/*
-     
-          {recipes.length > 0 && (
-            <div className="mt-4">
-              <h2>Generated Recipes:</h2>
-              <div className="row justify-content-center">
-                {recipes.map((recipeData, index) => (
-                  <div key={index} className="">
-                    <div className="card">
-                      <div className="card-body">
-                        <h5 className="card-title">Recipe {index + 1}</h5>
-                        <p className="card-text">{recipeData.recipe}</p>
-                        <div className="card mt-3">
-                          <div className="card-body">
-                            <h6 className="card-subtitle mb-2 text-muted">
-                              Instructions
-                            </h6>
-                            <p className="card-text">
-                              {recipeData.instructions}
-                            </p>
-                          </div>
-                        </div>
-
-                        <button
-                          className={`btn ${
-                            favorites.has(index)
-                              ? "btn-danger"
-                              : "btn-outline-danger"
-                          } mt-3`}
-                          onClick={() => toggleFavorite(index, recipeData)}
-                        >
-                          {favorites.has(index) ? "Unfavorite" : "Favorite"} ❤️
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        
-*/
 
 export default FavoritesPage;

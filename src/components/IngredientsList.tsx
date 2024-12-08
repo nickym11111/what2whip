@@ -3,19 +3,21 @@ import Configuration from "openai";
 import OpenAI from "openai";
 import { ApiKey } from "aws-cdk-lib/aws-apigateway";
 import axios from "axios";
-import supabase from "../utils/client";
+import supabase from "../../backend/utils/client";
 
 const IngredientsList = ({ token }: { token: any }) => {
   const [ingredient, setIngredient] = useState<string>(
     sessionStorage.getItem("ingredient") || ""
   );
   const [ingredients, setIngredients] = useState<string[]>(
-    JSON.parse(sessionStorage.getItem("ingredients") ||"[]"));
+    JSON.parse(sessionStorage.getItem("ingredients") || "[]")
+  );
   const [recipes, setRecipes] = useState<
     { recipe: string; instructions: string }[]
-  >( JSON.parse(sessionStorage.getItem("recipes")||"[]"));
+  >(JSON.parse(sessionStorage.getItem("recipes") || "[]"));
   const [favorites, setFavorites] = useState<Set<number>>(
-    new Set (JSON.parse(sessionStorage.getItem("favorites") || "[]")));
+    new Set(JSON.parse(sessionStorage.getItem("favorites") || "[]"))
+  );
 
   const [loading, setLoading] = useState<boolean>(false);
   //const [cachedResponses, setCachedResponses] = useState<
@@ -38,7 +40,6 @@ const IngredientsList = ({ token }: { token: any }) => {
   useEffect(() => {
     sessionStorage.setItem("favorites", JSON.stringify(Array.from(favorites)));
   }, [favorites]);
-
 
   const addIngredient = () => {
     if (ingredient.trim() !== "") {
@@ -73,7 +74,7 @@ const IngredientsList = ({ token }: { token: any }) => {
       setRecipes(cachedResponses[prompt]); // Split and update recipes
       return;
     }
-      */
+*/
     setLoading(true);
 
     try {
@@ -118,6 +119,8 @@ const IngredientsList = ({ token }: { token: any }) => {
     }
   };
 
+
+
   // Save favorite to Supabase
   const toggleFavorite = async (
     index: number,
@@ -133,12 +136,16 @@ const IngredientsList = ({ token }: { token: any }) => {
         return newFavorites;
       });
 
+      
       // Remove from Supabase
-      await supabase
-        .from("favorites")
-        .delete()
-        .eq("user_id", token)
-        .eq("recipe_id", index);
+      await fetch("http://localhost:3000/ingredientsList", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: token,
+          recipe_data: index,
+        }),
+      });
     } else {
       setFavorites((prev) => {
         const newFavorites = new Set(prev);
@@ -147,15 +154,19 @@ const IngredientsList = ({ token }: { token: any }) => {
       });
 
       // Insert into Supabase
-      await supabase.from("favorites").insert([
-        {
-          user_id: token, // store the user's ID or token
-          recipe_id: index,
-          recipe_data: JSON.stringify(recipeData), // store the recipe data (or just the ID)
-        },
-      ]);
-    }
+      // Call backend to add favorite
+    await fetch("http://localhost:3000/ingredientsList", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: token,
+        recipe_id: index,
+        recipe_data: recipeData,
+      }),
+    });
+  }
   };
+  
 
   return (
     <div className="container mt-4">

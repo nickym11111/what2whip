@@ -1,5 +1,5 @@
 import { useState } from "react";
-import supabase from "../utils/client";
+import supabase from "../../backend/utils/client";
 import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 

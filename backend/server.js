@@ -1,40 +1,38 @@
-const express = require("express");
-const cors = require("cors");
-const { OpenAI } = require("openai");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import { OpenAI } from "openai";
+import dotenv from "dotenv";
+import bodyParser from "body-parser";
+import ingredientsListRoutes from "./routes/ingredientsListRoutes.js";
+import favoritesRoutes from "./routes/favoritesRoutes.js";
+dotenv.config();
+
 
 const app = express();
 const port = 3000;
 
-// Enable CORS
-app.use(cors()); // Allow requests from your frontend origin
-
-// Middleware
+app.use(cors()); 
 app.use(express.json());
+app.use(bodyParser.json());
+app.use("/ingredientsList", ingredientsListRoutes);
+app.use("/favorites", favoritesRoutes);
 
-// Configure OpenAI API
+
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // Replace with your OpenAI API key
+  apiKey: process.env.OPENAI_API_KEY, 
 });
 
 const cache = new Map();
 
-// API endpoint to handle requests
 app.post("/api/generate", async (req, res) => {
   const { prompt } = req.body;
   console.log(prompt);
   
-/*
-  if (cache.has(prompt)) {
-    return res.json({ generatedText : cache.get(prompt) });
-  }
-*/
+
   try {
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
-      //max_tokens: 300,
-     // temperature: 0.7,
     });
     console.log("OpenAI API Response:",  response.choices[0].message.content);
     const result = response.choices[0].message.content;
