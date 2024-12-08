@@ -2,21 +2,23 @@ import supabase from "../utils/client.js";
 
 // Fetch all favorites
 export const getFavorites = async (req, res) => {
-    
     const userId = req.query.user_id; // Assume `user_id` is passed as a query parameter.
-    console.log("reached here favorites");
+    console.log("userId in backend", userId);
+
     try {
       const { data, error } = await supabase
         .from("favorites")
-        .select("recipe_data")
-        .eq("user_id", userId);
-  
+        .select("recipe_data");
+
+        console.log("data", data);
       if (error) {
+        console.log(error);
         return res.status(500).json({ error: error.message });
       }
   
       res.status(200).json(data);
     } catch (err) {
+    
       res.status(500).json({ error: "Server error" });
     }
   };
