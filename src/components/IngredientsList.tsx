@@ -103,6 +103,7 @@ const IngredientsList = () => {
         }
       );
       setRecipes(recipeInstructionDict);
+      setFavorites(new Set());
 
     } catch (error) {
       console.error("Error calling the backend API:", error);
@@ -112,6 +113,7 @@ const IngredientsList = () => {
           instructions: "",
         },
       ]);
+      setFavorites(new Set());
     } finally {
       setLoading(false);
     }
@@ -242,7 +244,7 @@ const IngredientsList = () => {
                           } mt-3`}
                           onClick={() => toggleFavorite(index, recipeData)}
                         >
-                          {favorites.has(index) ? "unfavorite" : "favorite"} ❤️
+                          {"favorite"} ❤️
                         </button>
                       </div>
                     </div>
