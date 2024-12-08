@@ -30,3 +30,5 @@ Then fork and clone this repository,
 - Run application (npm run dev)
 
 # DEMO:
+
+[what2whipdemo.zip](https://github.com/user-attachments/files/18054181/what2whipdemo.zip)
