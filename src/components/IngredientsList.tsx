@@ -209,14 +209,14 @@ const IngredientsList = () => {
             onClick={callBackendAPI}
             disabled={loading}
           >
-            {loading ? "generating..." : "generate Recipes"}
+            {loading ? "generating..." : "generate recipes"}
           </button>
           {recipes.length > 0 && (
             <div className="mt-4">
               <h2>generated recipes:</h2>
               <div className="row justify-content-center">
                 {recipes.map((recipeData, index) => (
-                  <div key={index} className="">
+                  <div key={index} className="mb-4">
                     <div className="card">
                       <div className="card-body">
                         <h5 className="card-title">Recipe {index + 1}</h5>

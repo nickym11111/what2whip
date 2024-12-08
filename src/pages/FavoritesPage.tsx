@@ -39,6 +39,7 @@ const FavoritesPage = () => {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
+        paddingBottom: "6rem",
       }}
     >
       <div
@@ -72,7 +73,7 @@ const FavoritesPage = () => {
           {favoriteRecipes.map((item: any, index: any) => {
             const recipeData = JSON.parse(item.recipe_data);
             return (
-              <div key={index} className="">
+              <div key={index} className="mb-4">
                 <div className="card">
                   <div className="card-body">
                     <h5 className="card-title">Recipe {index + 1}</h5>
